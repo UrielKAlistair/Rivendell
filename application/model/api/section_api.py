@@ -6,7 +6,6 @@ from ...model.db import db
 from .api_helpers import NotFoundError, InternalError, BadRequestError, ConflictError, AuthError
 from datetime import datetime
 from application.controller.helper_functions import only_admins, session_user
-from base64 import b64encode, b64decode
 
 section_json = {"section_id": fields.Integer,
                 "section_name": fields.String,
@@ -57,6 +56,7 @@ class UserSectionsApi(Resource):
                 sections = db.session.query(Section).all()
                 for section in sections:
                     for book in section.books:
+                        book.book_author = book.author.author_name
                         temp = db.session.query(BookRequests).filter(BookRequests.book_id == book.book_id,
                                                                      BookRequests.user_id == user.user_id,
                                                                      (BookRequests.request_status == "Pending") | (
@@ -135,12 +135,16 @@ class SectionApi(Resource):
         except:
             raise InternalError()
 
-        # Since the first() call is not made, the object is still a Query. The Count is thus checked.
-        # The reason for maintaining the query object is that only they have a delete method.
         if not sec_to_del:
             raise NotFoundError()
         else:
+            authors=[]
+            for book in sec_to_del.books:
+                authors.append(book.author)
             db.session.delete(sec_to_del)
+            for author in authors:
+                if len(author.books) == 0:
+                    db.session.delete(author)
             db.session.commit()
             return make_response('', 200)
 

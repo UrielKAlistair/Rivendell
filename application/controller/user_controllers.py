@@ -9,6 +9,6 @@ def user_home():
         if user.user_type == 'Admin' or user.user_type == 'God':
             return redirect('/admin')
         else:
-            return render_template("user_home.html", isLoggedIn="true", username=user.user_name, uid=user.user_id)
+            return render_template("user_home.html", isLoggedIn="true", username=user.user_name)
     else:
-        return render_template("user_home.html", isLoggedIn="false", uid=-1)
+        return render_template("user_home.html", isLoggedIn="false")

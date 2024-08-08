@@ -1,10 +1,10 @@
 import re
 
-from flask import request, session, current_app as app
+from flask import request, session, make_response, current_app as app
 from ..model.db import db
 from ..model.models import User
 from werkzeug.security import check_password_hash, generate_password_hash
-from base64 import b64encode,b64decode
+from base64 import b64encode, b64decode
 
 
 def isemail(email):
@@ -62,3 +62,11 @@ def register_user():
         db.session.commit()
 
         return {}
+
+
+@app.route('/isloggedin', methods=["POST"])
+def is_logged_in():
+    try:
+        return make_response('', 200) if session['user'] else make_response('', 401)
+    except KeyError:
+        return make_response('', 401)

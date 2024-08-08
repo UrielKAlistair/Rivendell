@@ -1,6 +1,5 @@
 from .db import db
 
-
 class User(db.Model):
     __tablename__ = "user"
 
@@ -32,8 +31,6 @@ class Section(db.Model):
 
     books = db.relationship('Book', back_populates='section', cascade='all, delete-orphan')
 
-    # section_search = db.relationship('SectionSearch', back_populates='section')
-
     def __init__(self, section_name, date_of_creation, section_description):
         self.section_name = section_name
         self.date_of_creation = date_of_creation
@@ -48,21 +45,31 @@ class Book(db.Model):
     book_price = db.Column(db.Float, nullable=False)
     book_image = db.Column(db.String(256))
     book_rating = db.Column(db.Float, nullable=False)
-    book_author = db.Column(db.String(50), nullable=False)
+
+    author_id = db.Column(db.Integer, db.ForeignKey('author.author_id'), nullable=False)
+    author = db.relationship('Author', back_populates='books')
 
     section_id = db.Column(db.Integer, db.ForeignKey('section.section_id'), nullable=False)
     section = db.relationship('Section', back_populates='books')
 
-    # book_search = db.relationship('BookSearch', back_populates='book')
-
-    def __init__(self, book_name, book_price, book_image, book_rating, section_id, book_author):
+    def __init__(self, book_name, book_price, book_image, book_rating, section_id, author_id):
         self.book_name = book_name
         self.book_price = book_price
         self.book_image = book_image
         self.book_rating = book_rating
-        self.book_author = book_author
+        self.author_id = author_id
         self.section_id = section_id
 
+class Author(db.Model):
+    __tablename__ = "author"
+
+    author_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    author_name = db.Column(db.String(50), nullable=False)
+
+    books = db.relationship('Book', back_populates='author', cascade='all, delete-orphan')
+
+    def __init__(self, author_name):
+        self.author_name = author_name
 
 class BookRequests(db.Model):
     __tablename__ = "bookrequests"
@@ -106,71 +113,101 @@ class BookOrders(db.Model):
         self.user_id = user_id
         self.book_id = book_id
 
-# class ProductSearch(db.Model):
-#     __tablename__ = "product_search"
-#
-#     rowid = db.Column(db.Integer, db.ForeignKey('product.product_id'), primary_key=True)
-#     product_name = db.Column(db.String(50))
-#     product = db.relationship('Product')
-#
-# class CatSearch(db.Model):
-#     __tablename__ = "cat_search"
-#
-#     rowid = db.Column(db.Integer, db.ForeignKey('category.category_id'), primary_key=True)
-#     category_name = db.Column(db.String(50))
-#     category = db.relationship('Category')
+class BookSearch(db.Model):
+    __tablename__ = "book_search"
 
+    rowid = db.Column(db.Integer, db.ForeignKey('book.book_id'), primary_key=True)
+    book_name = db.Column(db.String(50))
+    book = db.relationship('Book')
 
-db.create_all()
+class SectionSearch(db.Model):
+    __tablename__ = "section_search"
 
-# x=db.session.query(User).filter(User.user_name == 'morgan freeman')
-# print(f"Updating {x} in models.py", x.first().user_type)
-# x.update({'user_type': 'God'})
-# print(x.first().user_type)
-# db.session.commit()
+    rowid = db.Column(db.Integer, db.ForeignKey('section.section_id'), primary_key=True)
+    section_name = db.Column(db.String(50))
+    section = db.relationship('Section')
 
-# CREATE VIRTUAL TABLE
-# product_search
-# USING fts5(product_name, content=product,content_rowid=product_id, tokenize="porter unicode61")
+class AuthorSearch(db.Model):
+    __tablename__ = "author_search"
 
-# CREATE TRIGGER product_add_trigger
-# AFTER INSERT ON product
-# BEGIN
-# insert into product_search(product_name,rowid) values (new.product_name, new.rowid);
-# END
-#
-# CREATE TRIGGER product_delete_trigger
-# AFTER DELETE ON product
-# BEGIN
-# insert into product_search(product_search, product_name, rowid) values ('delete', old.product_name, old.rowid);
-# END
-#
-# CREATE TRIGGER product_update_trigger
-# AFTER UPDATE ON product
-# BEGIN
-# insert into product_search(product_search, product_name, rowid) values ('delete', old.product_name, old.rowid);
-# insert into product_search(product_name, rowid) values (new.product_name, new.rowid);
-# END
+    rowid = db.Column(db.Integer, db.ForeignKey('author.author_id'), primary_key=True)
+    author_name = db.Column(db.String(50))
+    author = db.relationship('Author')
 
-# CREATE VIRTUAL TABLE
-# cat_search
-# USING fts5(category_name, content=category,content_rowid=category_id, tokenize="porter unicode61")
+# db.create_all()
 
-# CREATE TRIGGER category_add_trigger
-# AFTER INSERT ON category
-# BEGIN
-# insert into cat_search(category_name, rowid) values (new.category_name, new.rowid);
-# END;
-#
-# CREATE TRIGGER category_delete_trigger
-# AFTER DELETE ON category
-# BEGIN
-# insert into cat_search(cat_search, category_name, rowid) values ('delete', old.category_name, old.rowid);
-# END;
-#
-# CREATE TRIGGER category_update_trigger
-# AFTER UPDATE ON category
-# BEGIN
-# insert into cat_search(cat_search, category_name, rowid) values ('delete', old.category_name, old.rowid);
-# insert into cat_search(category_name, rowid) values (new.category_name, new.rowid);
-# END;
+# The following SQL code is to be executed to create the FTS5 virtual tables and triggers.
+"""
+CREATE VIRTUAL TABLE
+book_search
+USING fts5(book_name, content=book,content_rowid=book_id, tokenize="porter unicode61");
+
+CREATE VIRTUAL TABLE
+author_search
+USING fts5(author_name, content=author,content_rowid=author_id, tokenize="porter unicode61");
+
+CREATE VIRTUAL TABLE
+section_search
+USING fts5(section_name, content=section,content_rowid=section_id, tokenize="porter unicode61");
+
+CREATE TRIGGER book_add_trigger
+AFTER INSERT ON book
+BEGIN
+insert into book_search(book_name,rowid) values (new.book_name, new.rowid);
+END;
+
+CREATE TRIGGER book_delete_trigger
+AFTER DELETE ON book
+BEGIN
+insert into book_search(book_search, book_name, rowid) values ('delete', old.book_name, old.rowid);
+END;
+
+CREATE TRIGGER book_update_trigger
+AFTER UPDATE ON book
+BEGIN
+insert into book_search(book_search, book_name, rowid) values ('delete', old.book_name, old.rowid);
+insert into book_search(book_name, rowid) values (new.book_name, new.rowid);
+END;
+
+CREATE TRIGGER section_add_trigger
+AFTER INSERT ON section
+BEGIN
+insert into section_search(section_name, rowid) values (new.section_name, new.rowid);
+END;
+
+CREATE TRIGGER section_delete_trigger
+AFTER DELETE ON section
+BEGIN
+insert into section_search(section_search, section_name, rowid) values ('delete', old.section_name, old.rowid);
+END;
+
+CREATE TRIGGER section_update_trigger
+AFTER UPDATE ON section
+BEGIN
+insert into section_search(section_search, section_name, rowid) values ('delete', old.section_name, old.rowid);
+insert into section_search(section_name, rowid) values (new.section_name, new.rowid);
+END;
+
+CREATE TRIGGER author_add_trigger
+AFTER INSERT ON author
+BEGIN
+insert into author_search(author_name, rowid) values (new.author_name, new.rowid);
+END;
+
+CREATE TRIGGER author_delete_trigger
+AFTER DELETE ON author
+BEGIN
+insert into author_search(author_search, author_name, rowid) values ('delete', old.author_name, old.rowid);
+END;
+
+CREATE TRIGGER author_update_trigger
+AFTER UPDATE ON author
+BEGIN
+insert into author_search(author_search, author_name, rowid) values ('delete', old.author_name, old.rowid);
+insert into author_search(author_name, rowid) values (new.author_name, new.rowid);
+END;
+
+INSERT INTO book_search(book_search) VALUES("rebuild");
+INSERT INTO section_search(section_search) VALUES("rebuild");
+INSERT INTO author_search(author_search) VALUES("rebuild");
+"""

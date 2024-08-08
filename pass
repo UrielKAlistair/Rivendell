@@ -10,24 +10,35 @@ Lulu
 lulu@lulu.lulu
 LuLulului$1u1u
 
+- check del section and del book; make it del author too
 ---
-1. An librarian can monitor all the users, see all the statistics
-e.g. active users, grant requests, e-books issued, revoked etc.
+1. An librarian can monitor all the users, see all the statistics (2.5 hrs)
+- Number of active users
+- Popular genres
+- Number of books issued
 
-2. settings for user: hide owned/requested books on homepage, change password
+2. settings for user: hide owned/requested books on homepage, change password (1 hr)
 
-3. search for user - books by name , section, author; search for admin
+3. search for user - books by name , section, author; search for admin (3hrs)
+- Make Search in Navbar switch to Search route;
+- Make HTML of Search page and make it a Vue Component, and add it as a route to app.
+- Make it send a correct request to the search API
+- Make it display the results correctly; Enable sorting also.
 
-4. A user can update their profile page, rate an e-book. 
+4. A user can update their profile page, rate an e-book. (6 hrs)
 - Make a reviews table in models
--
-11) Stats for users
+- Ensure Book API and login and admin home API calls do not break due to change in models
+- Add a rating count field in the book model
+- Make a page to review a book a person has read
+- Display the rating everywhere with the books
 
-12) remove edit reloads and replace with event handlers
-
-13) horizontal scroll button css js: fun coding exercise; UI redesign.
-
-14) The librarian should be added automatically whenever a new database is created
+11) Stats for users (4 hrs)
+- Total books read
+- Genre distribution of books read
+- Average rating given
+- Your top Reviews
+- MAL type of you enjoyed, they didnt etc.
+- A Webpage for each book
 ---
 5. BACKEND JOBS:
 
@@ -53,6 +64,14 @@ Add caching where required to increase the performance
 Add cache expiry
 API Performance
 
+NOT DOING THIS; NO TIME
+
 15) read books
 
 16) download pdf
+
+12) remove edit reloads and replace with event handlers
+
+13) horizontal scroll button css js: fun coding exercise; UI redesign.
+
+14) The librarian should be added automatically whenever a new database is created

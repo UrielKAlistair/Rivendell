@@ -27,7 +27,7 @@ celery.Task = workers.ContextTask
 from application.controller.login_controllers import login, register
 from application.controller.login_api import validate_login
 from application.controller import user_controllers, admin_controllers
-from application.model.api import api_helpers, section_api, book_api, book_request_api, purchase_api
+from application.model.api import api_helpers, section_api, book_api, book_request_api, purchase_api, search_api
 
 # Admin
 api_helpers.api.add_resource(section_api.SectionApi, '/api/addsection',
@@ -53,6 +53,8 @@ api_helpers.api.add_resource(purchase_api.PurchaseApi, "/api/purchase/<int:book_
 api_helpers.api.add_resource(book_api.MyReqBooksApi, "/api/myreqbooks")
 api_helpers.api.add_resource(book_api.OwnedBooksApi, "/api/myownedbooks")
 api_helpers.api.add_resource(book_api.MyPastReqsApi, "/api/mypastreqs")
+
+api_helpers.api.add_resource(search_api.Search, "/api/search")
 
 from application.controller.misc_controllers import error_404
 

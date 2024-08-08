@@ -3,6 +3,12 @@ export const navbar = {
         username: String,
         isloggedin: Boolean,
     },
+    data: function () {
+        return {
+            search_query: ""
+        }
+    }
+    ,
     template: `
     <nav class="py-2.5 fixed flex row justify-content-between align-items-center navbar navbar-expand-lg navbar-light" style="background: #EAF4F3;height: 10vh; width: 100vw; margin: 0">
         <div class="image-container align-items-center d-flex h-100 mx-3">
@@ -10,12 +16,13 @@ export const navbar = {
           <img src="static/images/logo.jpeg" alt="Website Logo" class="img-fluid h-100">
         </div>
 
-        <form action="/search" class="form-inline flex row col-md-4 align-items-center justify-contents-center">
+        <form @submit.prevent="handleSubmit" class="form-inline flex row col-md-4 align-items-center justify-contents-center">
           <input
             type="search"
             name="q"
+            v-model="search_query"
             placeholder="Search"
-            class="form-control mr-sm-2 px-3 py-1.5 text-white bg-transparent border border-gray-300 focus:border-primary focus:outline-none w-75"
+            class="form-control mr-sm-2 px-3 py-1.5 text-black bg-transparent border border-gray-300 focus:border-primary focus:outline-none w-75"
           />
         
         <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">
@@ -45,5 +52,10 @@ export const navbar = {
           </div>
         </div> 
     </nav>
-    `
+    `,
+    methods:{
+        handleSubmit(){
+            window.location.replace('/#/search?q='+this.search_query)
+        }
+    }
 }

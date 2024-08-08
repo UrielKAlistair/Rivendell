@@ -27,7 +27,7 @@ class BookRequestApi(Resource):
         if db.session.query(BookRequests).filter(
                 BookRequests.user_id == user.user_id,
                 (BookRequests.request_status == "Pending") | (
-                        BookRequests.request_status == "Approved")).count() == BookRequestApi.max_book_count:
+                        BookRequests.request_status == "Approved")).count() >= BookRequestApi.max_book_count:
             raise ForbiddenError()
 
         if db.session.query(BookRequests).filter(BookRequests.user_id == user.user_id,
