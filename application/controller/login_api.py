@@ -5,6 +5,7 @@ from ..model.db import db
 from ..model.models import User
 from werkzeug.security import check_password_hash, generate_password_hash
 from base64 import b64encode, b64decode
+from .helper_functions import only_logged_in
 
 
 def isemail(email):
@@ -70,3 +71,40 @@ def is_logged_in():
         return make_response('', 200) if session['user'] else make_response('', 401)
     except KeyError:
         return make_response('', 401)
+
+
+@app.route('/updateprofile', methods=["POST"])
+@only_logged_in
+def update_details():
+    user = db.session.query(User).filter_by(user_id=session['user']).first()
+    uname = request.form["username"]
+    email = request.form["email"]
+    old_password = request.form["old_password"]
+    new_password = request.form["new_password"]
+    if not authenticate_login(user.user_name, old_password):
+        return {"error": 'incorrect_password'}
+    if not isemail(email):
+        return {"error": 'invalid_email'}
+    if isemail(uname):
+        return {"error": 'uname_mail'}
+    mail_query = db.session.query(User).filter(User.user_email == email)
+    if mail_query is not None:
+        if mail_query.first().user_id != user.user_id or mail_query.count() > 1:
+            return {"error": 'email_taken'}
+
+    uname_query = db.session.query(User).filter(User.user_name == uname)
+    if uname_query is not None:
+        if uname_query.first().user_id != user.user_id or uname_query.count() > 1:
+            return {"error": 'uname_taken'}
+
+    _, salt, pwd_hash = generate_password_hash(new_password, method="pbkdf2:sha256", salt_length=16).split("$")
+    pwd_hash = b64decode(pwd_hash)
+    db.session.query(User).filter(User.user_id == user.user_id).update(
+        {"user_name": uname, "user_email": email, "user_password": pwd_hash, "password_salt": salt})
+    return {}
+
+
+@app.route('/settings', methods=['POST'])
+def settings_api():
+    user = db.session.query(User).filter_by(user_id=session['user']).first()
+    return {"username": user.user_name, "email": user.user_email}

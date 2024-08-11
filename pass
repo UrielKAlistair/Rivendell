@@ -10,53 +10,16 @@ Lulu
 lulu@lulu.lulu
 LuLulului$1u1u
 
-- check del section and del book; make it del author too
 ---
-1. An librarian can monitor all the users, see all the statistics (2.5 hrs)
-- Number of active users
-- Popular genres
-- Number of books issued
+1. nested vue router - change uname, change email, change password buttons -> confirm who you are -> 3 different API calls
 
-2. settings for user: hide owned/requested books on homepage, change password (1 hr)
+3. search for admin; Enable filters and sorting.
 
-3. search for user - books by name , section, author; search for admin (3hrs)
-- Make Search in Navbar switch to Search route;
-- Make HTML of Search page and make it a Vue Component, and add it as a route to app.
-- Make it send a correct request to the search API
-- Make it display the results correctly; Enable sorting also.
-
-4. A user can update their profile page, rate an e-book. (6 hrs)
-- Make a reviews table in models
-- Ensure Book API and login and admin home API calls do not break due to change in models
-- Add a rating count field in the book model
-- Make a page to review a book a person has read
-- Display the rating everywhere with the books
-
-11) Stats for users (4 hrs)
-- Total books read
-- Genre distribution of books read
-- Average rating given
-- Your top Reviews
-- MAL type of you enjoyed, they didnt etc.
-- A Webpage for each book
----
 5. BACKEND JOBS:
-
-5.1) Scheduled Job - Daily reminders - The application should send daily reminders to users on g-chat using Google Chat Webhooks or SMS or mail
 
 5.2) Scheduled Job - Monthly Activity Report - Device a monthly report for the librarian created using HTML and sent via mail.
 
 5.3) User Triggered Async Job - Export as CSV - Devise a CSV format details for the issued/returned/granted e-books done by the librarian.
-
-5.4) auto-revoke after n days
-celery jobs: daily reminders
-webhooks: monthly report
-
-6. WEBHOOKS
-
-6.1) confirm email
-
-6.2) forgot password
 
 7) Performance and Caching
 
@@ -64,11 +27,30 @@ Add caching where required to increase the performance
 Add cache expiry
 API Performance
 
-NOT DOING THIS; NO TIME
-
 15) read books
 
 16) download pdf
+---
+4. A user can update their profile page, rate an e-book. (6 hrs)
+- Make a reviews table in models
+- Ensure Book API and login and admin home API calls do not break due to change in models
+- Add a rating count field in the book model
+- Make a page to review a book a person has read
+- Display the rating everywhere with the books
+
+11) Stats for users (6 hrs)
+- Total books read
+- Genre distribution of books read
+- Average rating given
+- Your top Reviews
+- MAL type of you enjoyed, they didnt etc.
+- A Webpage for each book
+
+6. WEBHOOKS
+
+6.1) confirm email
+
+6.2) forgot password
 
 12) remove edit reloads and replace with event handlers
 

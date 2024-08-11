@@ -44,7 +44,9 @@ api_helpers.api.add_resource(book_request_api.RejectReqApi, "/api/reject")  # Re
 api_helpers.api.add_resource(book_request_api.RevokeReqApi, "/api/revoke")  # Revoke a json of many requests
 
 # User
-api_helpers.api.add_resource(section_api.UserSectionsApi, '/api/sections')  # All books from all sections for home
+api_helpers.api.add_resource(section_api.EverythingApi, '/api/everything')  # All books from all sections for home
+api_helpers.api.add_resource(section_api.SectionsApi, "/api/sections")
+
 api_helpers.api.add_resource(book_request_api.BookRequestApi, "/api/bookrequest/<int:book_id>")  # Request a book
 api_helpers.api.add_resource(book_request_api.CancelRequestApi, "/api/cancelrequest/<int:req_id>")  # Cancel a request
 api_helpers.api.add_resource(book_request_api.ReturnBookApi, "/api/returnbook/<int:req_id>")  # Return a book
@@ -55,7 +57,6 @@ api_helpers.api.add_resource(book_api.OwnedBooksApi, "/api/myownedbooks")
 api_helpers.api.add_resource(book_api.MyPastReqsApi, "/api/mypastreqs")
 
 api_helpers.api.add_resource(search_api.Search, "/api/search")
-
 from application.controller.misc_controllers import error_404
 
 app.register_error_handler(404, error_404)

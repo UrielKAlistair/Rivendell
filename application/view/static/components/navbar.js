@@ -55,6 +55,7 @@ export const navbar = {
     `,
     methods:{
         handleSubmit(){
+            window.history.pushState({}, '', this.$route)
             window.location.replace('/#/search?q='+this.search_query)
         }
     }

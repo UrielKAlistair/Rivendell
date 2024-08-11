@@ -9,6 +9,7 @@ class User(db.Model):
     password_salt = db.Column(db.String(16), nullable=False)
     user_email = db.Column(db.String(256), unique=True, nullable=False)  # TODO: Send an email confirmation?
     user_type = db.Column(db.String(10), nullable=False)
+    last_login = db.Column(db.DateTime)
 
     my_owned_books = db.relationship('BookOrders', back_populates='user')
     my_requests = db.relationship('BookRequests', back_populates='user')
@@ -134,7 +135,7 @@ class AuthorSearch(db.Model):
     author_name = db.Column(db.String(50))
     author = db.relationship('Author')
 
-# db.create_all()
+db.create_all()
 
 # The following SQL code is to be executed to create the FTS5 virtual tables and triggers.
 """

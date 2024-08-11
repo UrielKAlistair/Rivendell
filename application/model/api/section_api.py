@@ -33,9 +33,9 @@ full_json = {"section_id": fields.Integer,
              "books": fields.List(fields.Nested(book_json))}
 
 
-class UserSectionsApi(Resource):
+class EverythingApi(Resource):
 
-    # get all the sections' details
+    # get all the sections' details and all books within them
     @marshal_with(full_json)
     def get(self):
 
@@ -60,7 +60,7 @@ class UserSectionsApi(Resource):
                         temp = db.session.query(BookRequests).filter(BookRequests.book_id == book.book_id,
                                                                      BookRequests.user_id == user.user_id,
                                                                      (BookRequests.request_status == "Pending") | (
-                                                                                 BookRequests.request_status == "Approved")).first()
+                                                                             BookRequests.request_status == "Approved")).first()
                         if temp is not None:
                             book.request_status = temp.request_status
                         else:
@@ -138,7 +138,7 @@ class SectionApi(Resource):
         if not sec_to_del:
             raise NotFoundError()
         else:
-            authors=[]
+            authors = []
             for book in sec_to_del.books:
                 authors.append(book.author)
             db.session.delete(sec_to_del)
@@ -168,3 +168,16 @@ class SectionApi(Resource):
                     raise InternalError()
 
         return make_response('', 201)
+
+
+class SectionsApi(Resource):
+
+    # Get all sections
+    @marshal_with(section_json)
+    def get(self):
+        try:
+            sections = db.session.query(Section).all()
+        except:
+            raise InternalError()
+
+        return sections, 200

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reminder</title>
+</head>
+<body>
+<!--if not logged in today, send an email-->
+{% if login_alert %}
+    <h1>Hello, {{username}}! Your library misses you! <br>
+        Read a book today! <br>
+    </h1>
+{% endif %}
+{% if due_flag %}
+    <h2>ALERT! </h2><br>
+    <h2>Your book(s),</h2>
+<h3><ol>
+    {% for book in due_books %}
+    <li>{{book[0]}}, is due in {% if book[1]!= 0 %} {{book[1]}} days, {% endif %} {{book[2]}} hours! </li>
+    {% endfor %}
+{% endif %}
+</ol>
+    </h3>
+</body>
+</html>

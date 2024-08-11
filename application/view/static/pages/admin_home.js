@@ -1,5 +1,5 @@
 import {navbar} from "../components/navbar.js";
-
+import {stats} from "./admin_stats.js";
 
 const homenavbar = Vue.component('navbar', {
     ...navbar, beforeMount() {
@@ -234,7 +234,7 @@ const sect = Vue.component("sect", {
 })
 
 const addbookmodal = Vue.component("addbookmodal", {
-    props : {
+    props: {
         section_id: Number
     },
     data() {
@@ -281,13 +281,15 @@ const addbookmodal = Vue.component("addbookmodal", {
             }
             const img = submitEvent.target.book_image.files[0];
             if (img === undefined) {
-                fetch("/api/addbook/"+this.section_id,{method: "POST",
+                fetch("/api/addbook/" + this.section_id, {
+                    method: "POST",
                     body: JSON.stringify({
-                    'book_name': this.book_name,
-                    'book_author': this.book_author,
-                    'book_price': this.book_price,
-                    'book_rating': this.book_rating
-                })}).then(response => {
+                        'book_name': this.book_name,
+                        'book_author': this.book_author,
+                        'book_price': this.book_price,
+                        'book_rating': this.book_rating
+                    })
+                }).then(response => {
                         if (response.status === 201) {
                             alert("Book added successfully.")
                             this.$emit('close')
@@ -301,7 +303,7 @@ const addbookmodal = Vue.component("addbookmodal", {
                 const reader = new FileReader();
                 reader.readAsDataURL(img);
                 reader.onloadend = () => {
-                    fetch("/api/addbook/"+this.section_id, {
+                    fetch("/api/addbook/" + this.section_id, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -479,7 +481,7 @@ const allbooks = Vue.component('allbooks', {
     </div>
     `,
     beforeCreate() {
-        fetch("/api/sections").then(response => response.json()).then(data => {
+        fetch("/api/everything").then(response => response.json()).then(data => {
             this.sections = data
         })
     }
@@ -644,8 +646,6 @@ const requests = Vue.component('requests', {
         }
     }
 })
-const stats = {}
-
 
 const routes = [{
     path: '/',

@@ -13,7 +13,7 @@ export const allbooks = Vue.component('allbooks', {
     </div>
     `,
     beforeCreate() {
-        fetch("/api/sections").then(response => response.json()).then(data => {
+        fetch("/api/everything").then(response => response.json()).then(data => {
             this.sections = data
         })
     }

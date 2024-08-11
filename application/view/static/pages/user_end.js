@@ -4,6 +4,7 @@ import {mybooks} from "./user_books.js";
 import {mystats} from "./user_stats.js";
 import {search} from "./search.js";
 import {purchase} from "./user_payment.js";
+import {settings} from "./user_settings.js";
 
 const homenavbar = Vue.component('navbar', {
     ...navbar, beforeMount() {
@@ -12,6 +13,7 @@ const homenavbar = Vue.component('navbar', {
                 {text: "Home", href: "/"},
                 {text: "My Books", href: "/mybooks"},
                 {text: "Stats", href: "/mystats"},
+                {text: "Settings", href:"/settings"}
             ];
         } else {
             this.navigationLinks = [
@@ -40,6 +42,9 @@ const routes = [{
     },{
         path: '/search',
         component: search
+    },{
+        path: '/settings',
+        component: settings
     }]
 
 const router = new VueRouter({routes})
