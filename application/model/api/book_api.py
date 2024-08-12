@@ -6,6 +6,7 @@ from ...model.models import Book, BookRequests, BookOrders, Section, Author
 from ...model.db import db
 from .api_helpers import NotFoundError, InternalError, BadRequestError, ConflictError, AuthError
 from application.controller.helper_functions import only_admins, session_user
+from ...model.cache import cache
 
 book_json = {"book_id": fields.Integer,
              "book_name": fields.String,
@@ -141,6 +142,7 @@ class BookApi(Resource):
     @marshal_with(book_json)
     @only_admins
     def put(self, book_id):
+        cache.clear()
         args = book_edit_req_parser.parse_args()
 
         if args["book_name"] is None:
@@ -213,6 +215,7 @@ class BookApi(Resource):
     # Delete a book with a given book_id
     @only_admins
     def delete(self, book_id):
+        cache.clear()
         try:
             book_to_del: query.Query = db.session.query(Book).filter(Book.book_id == book_id)
         except:
@@ -232,6 +235,7 @@ class BookApi(Resource):
     # Add a book to a section with a given section_id
     @only_admins
     def post(self, sec_id):
+        cache.clear()
         args = book_req_parser.parse_args()
 
         if args["book_name"] is None:

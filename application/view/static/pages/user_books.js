@@ -95,7 +95,7 @@ const reqbook = Vue.component("reqbook", {
                 <RouterLink :to="'purchase/'+book.book_id+'/'+book.book_price" class="btn btn-danger">Buy</RouterLink>  
                 <a v-on:click="cancelRequest()" v-if="book.request_status=='Pending'" class="btn btn-primary m-2"> Cancel Request</a>
                 <div v-else class="flex flex-column d-flex justify-content-around">
-                    <a class="btn btn-warning m-2">Read</a>
+                    <a :href="'/readbook/'+book.book_id" target="_blank" class="btn btn-warning m-2">Read</a>
                     <a v-on:click="returnBook()" class="btn btn-success m-2">Return</a>
                 </div>
             </div>
@@ -151,8 +151,8 @@ const ownedbook = Vue.component("ownedbook", {
         <div class="card-body">
             <h6 class="card-title">{{ book.book_name}}</h6>
             <p class="card-text" style="margin-bottom: 0">{{ book.book_author}}</p>     
-                <a class="btn btn-success">Download</a>
-                <a class="btn btn-warning">Read</a>
+                <a class="btn btn-success" href="/static/pdfs/dummy.pdf" download>Download</a>
+                <a :href="'/readbook/'+book.book_id" target="_blank" class="btn btn-warning">Read</a>
         </div>
     </div>`
 

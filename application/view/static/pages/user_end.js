@@ -12,7 +12,6 @@ const homenavbar = Vue.component('navbar', {
             this.navigationLinks = [
                 {text: "Home", href: "/"},
                 {text: "My Books", href: "/mybooks"},
-                {text: "Stats", href: "/mystats"},
                 {text: "Settings", href:"/settings"}
             ];
         } else {
@@ -31,10 +30,6 @@ const routes = [{
     path: '/mybooks',
     component: mybooks
 },
-    {
-        path: '/mystats',
-        component: mystats
-    },
     {
         path: '/purchase/:id',
         component: purchase,

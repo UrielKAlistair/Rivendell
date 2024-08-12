@@ -6,6 +6,7 @@ from ...model.db import db
 from .api_helpers import NotFoundError, InternalError, BadRequestError, ConflictError, AuthError
 from datetime import datetime
 from application.controller.helper_functions import only_admins, session_user
+from ...model.cache import cache
 
 section_json = {"section_id": fields.Integer,
                 "section_name": fields.String,
@@ -37,6 +38,7 @@ class EverythingApi(Resource):
 
     # get all the sections' details and all books within them
     @marshal_with(full_json)
+    @cache.cached(timeout=60, key_prefix='everything')
     def get(self):
 
         user = session_user()
@@ -100,6 +102,7 @@ class SectionApi(Resource):
     @marshal_with(section_json)
     @only_admins
     def put(self, section_id):
+        cache.clear()
         args = section_req_parser.parse_args()
         sn = args['section_name']
         sd = args['section_description']
@@ -130,6 +133,7 @@ class SectionApi(Resource):
     # Delete a section with a given section_id
     @only_admins
     def delete(self, section_id):
+        cache.clear()
         try:
             sec_to_del = db.session.query(Section).get(section_id)
         except:
@@ -151,6 +155,7 @@ class SectionApi(Resource):
     # Add a new section
     @only_admins
     def post(self):
+        cache.clear()
         args = section_req_parser.parse_args()
         sn = args['section_name']
         sd = args['section_description']
@@ -174,6 +179,7 @@ class SectionsApi(Resource):
 
     # Get all sections
     @marshal_with(section_json)
+    @cache.cached(timeout=60, key_prefix='all_sections')
     def get(self):
         try:
             sections = db.session.query(Section).all()

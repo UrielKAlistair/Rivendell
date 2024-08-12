@@ -34,7 +34,7 @@ const book = Vue.component("book", {
                 <transition name="modal">
                     <editmodal :book="book" :section_name_default="section_name" v-if="showeditmodal" v-on:close="showeditmodal=false"></editmodal>
                 </transition>
-                <a class="btn btn-primary m-1">Read</a>
+                <a :href="'/readbook/'+book.book_id" target="_blank" class="btn btn-primary m-1">Read</a>
                 <a v-on:click="deletebook(book)" class="btn btn-danger m-1">Delete</a>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import flask
 from application.model.db import db
+from application.model.cache import cache
 from flask import Flask
 from os import path
 from application.controller import workers
@@ -13,20 +14,35 @@ app.app_context().push()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + pwd + '/application/model/database.sqlite3'
 app.config["SECRET_KEY"] = "replacethislaterplease"
+
 app.config["CELERY_BROKER_URL"] = "redis://localhost:6379/1"
 app.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/2"
+
+app.config["CACHE_TYPE"] = "RedisCache"
+app.config["CACHE_REDIS_HOST"] = "localhost"
+app.config["CACHE_REDIS_PORT"] = "6379"
+app.config["CACHE_REDIS_DB"] = "3"
+app.config["CACHE_DEFAULT_TIMEOUT"] = 300
+
 db.init_app(app)
+cache.init_app(app)
 
 celery = workers.celery
 celery.conf.update(
     broker_url=app.config["CELERY_BROKER_URL"],
-    result_backend=app.config["CELERY_RESULT_BACKEND"]
+    result_backend=app.config["CELERY_RESULT_BACKEND"],
+    timezone='Asia/Kolkata',
+    broker_connection_retry_on_startup=True
 )
 celery.Task = workers.ContextTask
 
-from application.controller.login_controllers import login, register
-from application.controller.login_api import validate_login
-from application.controller import user_controllers, admin_controllers
+# The controller code is imported so that the flask app registers the routes defined in those files.
+import application.controller.login_controllers
+import application.controller.login_api
+import application.controller.user_controllers
+import application.controller.admin_controllers
+from application.controller.misc_controllers import error_404
+
 from application.model.api import api_helpers, section_api, book_api, book_request_api, purchase_api, search_api
 
 # Admin
@@ -57,7 +73,6 @@ api_helpers.api.add_resource(book_api.OwnedBooksApi, "/api/myownedbooks")
 api_helpers.api.add_resource(book_api.MyPastReqsApi, "/api/mypastreqs")
 
 api_helpers.api.add_resource(search_api.Search, "/api/search")
-from application.controller.misc_controllers import error_404
 
 app.register_error_handler(404, error_404)
 

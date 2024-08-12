@@ -11,34 +11,20 @@ lulu@lulu.lulu
 LuLulului$1u1u
 
 ---
-1. nested vue router - change uname, change email, change password buttons -> confirm who you are -> 3 different API calls
-
 3. search for admin; Enable filters and sorting.
 
-5. BACKEND JOBS:
-
-5.2) Scheduled Job - Monthly Activity Report - Device a monthly report for the librarian created using HTML and sent via mail.
-
 5.3) User Triggered Async Job - Export as CSV - Devise a CSV format details for the issued/returned/granted e-books done by the librarian.
-
-7) Performance and Caching
-
-Add caching where required to increase the performance
-Add cache expiry
-API Performance
-
-15) read books
-
-16) download pdf
 ---
-4. A user can update their profile page, rate an e-book. (6 hrs)
+1. nested vue router - change uname, change email, change password buttons -> confirm who you are -> 3 different API calls
+
+4. A user can update their profile page, rate an e-book.
 - Make a reviews table in models
 - Ensure Book API and login and admin home API calls do not break due to change in models
 - Add a rating count field in the book model
 - Make a page to review a book a person has read
 - Display the rating everywhere with the books
 
-11) Stats for users (6 hrs)
+11) Stats for users
 - Total books read
 - Genre distribution of books read
 - Average rating given

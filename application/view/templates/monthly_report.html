@@ -5,6 +5,12 @@
     <title>Report</title>
 </head>
 <body>
-
+<p> Active User Count: {{active_user_count}} </p>
+<p> Total User Count: {{total_user_count}} </p>
+<p> Active Request Count: {{active_req_count}} </p>
+<h2> Genre Request Stats for the last 30 days</h2>
+{% for genre in genre_counts %}
+    <p> {{genre}}: {{genre_counts[genre]}} </p>
+{% endfor %}
 </body>
 </html>

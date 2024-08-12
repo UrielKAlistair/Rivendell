@@ -48,13 +48,13 @@ const book = Vue.component("book", {
             <div v-if="!book.book_owned">
                 <a v-on:click="makePurchase()" class="btn btn-danger">Buy</a>   
                 <a v-if="book.request_status=='Pending'" class="btn btn-secondary">Requested</a>
-                <a v-else-if="book.request_status=='Approved'"  class="btn btn-warning">Read</a>
+                <a v-else-if="book.request_status=='Approved'" :href="'/readbook/'+book.book_id" target="_blank" class="btn btn-warning">Read</a>
                 <a v-else v-on:click="sendRequest()" class="btn btn-primary">Request</a>
             </div>
             
             <div v-else>
-                <a class="btn btn-success">Download</a>
-                <a class="btn btn-warning">Read</a>
+                <a class="btn btn-success" href="/static/pdfs/dummy.pdf"  download>Download</a>
+                <a class="btn btn-warning" :href="'/readbook/'+book.book_id" target="_blank" >Read</a>
             </div>
         </div>
     </div>
